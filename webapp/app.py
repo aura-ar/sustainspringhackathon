@@ -54,7 +54,7 @@ def run_model():
         # X = maize_data
         # y = maize_data
 
-    else:
+    elif mode == "Wheat":
         y_wheat = y_filter1[y_filter1["Item"] == "Wheat"]
 
         wheat_data = Pesticides.merge(
@@ -66,6 +66,19 @@ def run_model():
 
         X = wheat_data["Value_pest"]
         y = wheat_data["Value_yield"]
+
+    elif mode == "Potato":
+        y_potato = y_filter1[y_filter1["Item"] == "Potatoes"]
+
+        potato_data = Pesticides.merge(
+            y_potato,
+            on=["Area", "Year"],
+            how="inner",
+            suffixes=("_pest", "_yield")
+        )
+
+        X = potato_data["Value_pest"]
+        y = potato_data["Value_yield"]
        
 
     #split into test and train

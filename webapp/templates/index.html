@@ -92,6 +92,10 @@
             {loading ? "Running..." : "Run Wheat Model"}
           </button>
 
+          <button onClick={() => runModel("Potato")} disabled={loading}>
+            {loading ? "Running..." : "Run Potato Model"}
+          </button>
+
           {/* Only renders the error message if error is not null */}
           {error && <p className="error">{error}</p>}
 
