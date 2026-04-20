@@ -51,11 +51,11 @@
 
       // This function runs when the button is clicked
       // It calls the Flask /run route and stores the response in state
-      async function runModel() {
+      async function runModel(mode) {
         setLoading(true);  // disables the button while running
         setError(null);    // clear any previous error
         try {
-          const res  = await fetch(`/run?seed=${seed}`); // call the Flask backend, passing the seed
+          const res  = await fetch(`/run?seed=${seed}&mode=${mode}`); // call the Flask backend, passing the seed and mode
           const data = await res.json();           // parse the JSON response
           setResults(data.results);                // store predictions vs actuals
           setImportances(data.importances);        // store feature importances
@@ -84,8 +84,12 @@
           </label>
 
           {/* onClick wires the button to runModel(); disabled prevents double-clicking */}
-          <button onClick={runModel} disabled={loading}>
-            {loading ? "Running..." : "Run Model"}
+          <button onClick={() => runModel("Maize")} disabled={loading}>
+            {loading ? "Running..." : "Run Maize Model"}
+          </button>
+
+          <button onClick={() => runModel("Wheat")} disabled={loading}>
+            {loading ? "Running..." : "Run Wheat Model"}
           </button>
 
           {/* Only renders the error message if error is not null */}
@@ -127,6 +131,8 @@
           )}
 
         </div>
+
+
         
       );
     }

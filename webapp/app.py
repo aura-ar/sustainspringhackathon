@@ -15,6 +15,7 @@ def index():
 @app.route("/run")
 def run_model():
 
+    
     # Read the seed from the query string e.g. /run?seed=42, default to 42 if not provided
     seed = int(request.args.get("seed", 42))
 
@@ -30,25 +31,42 @@ def run_model():
         how="inner"
     )
 
-    y_maize = y_filter1[y_filter1["Item"] == "Maize"]
+    mode = request.args.get("mode")
+    if mode == "Maize":
 
-    # x_maize = Pesticides.merge(
-    #     y_maize[["Area", "Year"]].drop_duplicates(),
-    #     on=["Area", "Year"],
-    #     how="inner"
-    # )
+        y_maize = y_filter1[y_filter1["Item"] == "Maize"]
 
-    maize_data = Pesticides.merge(
-        y_maize,
-        on=["Area", "Year"],
-        how="inner",
-        suffixes=("_pest", "_yield")
-    )
+        # x_maize = Pesticides.merge(
+        #     y_maize[["Area", "Year"]].drop_duplicates(),
+        #     on=["Area", "Year"],
+        #     how="inner"
+        # )
 
-    X = maize_data["Value_pest"]
-    y = maize_data["Value_yield"]  
-    # X = maize_data
-    # y = maize_data
+        maize_data = Pesticides.merge(
+            y_maize,
+            on=["Area", "Year"],
+            how="inner",
+            suffixes=("_pest", "_yield")
+        )
+
+        X = maize_data["Value_pest"]
+        y = maize_data["Value_yield"]  
+        # X = maize_data
+        # y = maize_data
+
+    else:
+        y_wheat = y_filter1[y_filter1["Item"] == "Wheat"]
+
+        wheat_data = Pesticides.merge(
+            y_wheat,
+            on=["Area", "Year"],
+            how="inner",
+            suffixes=("_pest", "_yield")
+        )
+
+        X = wheat_data["Value_pest"]
+        y = wheat_data["Value_yield"]
+       
 
     #split into test and train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
