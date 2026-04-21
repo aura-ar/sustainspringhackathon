@@ -12,7 +12,7 @@ y_filter1= Yield.merge(
     how="inner"
 )
 
-y_maize = y_filter1[y_filter1["Item"] == "Maize"]
+# y_maize = y_filter1[y_filter1["Item"] == "Maize"]
 
 # x_maize = Pesticides.merge(
 #     y_maize[["Area", "Year"]].drop_duplicates(),
@@ -20,19 +20,19 @@ y_maize = y_filter1[y_filter1["Item"] == "Maize"]
 #     how="inner"
 # )
 
-maize_data = Pesticides.merge(
-    y_maize,
-    on=["Area", "Year"],
-    how="inner",
-    suffixes=("_pest", "_yield")
-)
+data = Pesticides.merge(
+        y_filter1,
+        on=["Area", "Year"],
+        how="inner",
+        suffixes=("_pest", "_yield")
+    )
 
-X = maize_data["Value_pest"]
-y = maize_data["Value_yield"]  
+# X = data[["Value_pest", "Year", "Item"]]
+# y = data["Value_yield"]  
 
 
-# print(maize_data.shape)
-# print(maize_data.head(30))    
+print(data.shape)
+print(data.head(30))    
 # print(y_maize.shape)
 # print(x_maize.shape)
-print(maize_data.columns.tolist())
+# print(X.columns.tolist())

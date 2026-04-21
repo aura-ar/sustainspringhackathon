@@ -83,9 +83,10 @@
             />
           </label>
 
-          {/* onClick wires the button to runModel(); disabled prevents double-clicking */}
-          <button onClick={() => runModel("Maize")} disabled={loading}>
-            {loading ? "Running..." : "Run Maize Model"}
+          
+          {/* Rename in brackets to whatever is in the elif statement in app */}
+          <button onClick={() => runModel("Pest")} disabled={loading}>
+            {loading ? "Running..." : "Pesticides Prediction"}
           </button>
 
           <button onClick={() => runModel("Wheat")} disabled={loading}>

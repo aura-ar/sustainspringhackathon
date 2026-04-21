@@ -7,7 +7,7 @@ import pandas as pd
 app = Flask(__name__)
 
 def build_features(dataframe):
-    return pd.get_dummies(dataframe[["Value_pest", "Year", "Area"]], columns=["Area"])
+    return pd.get_dummies(dataframe[["Value_pest", "Year", "Item_yield"]])
 
 # This route "/" is the default page, this will run when the browerser runs the URL
 @app.route("/")
@@ -26,62 +26,81 @@ def run_model():
 
     Pesticides = pd.read_csv("datasets/pesticides.csv")
     Yield = pd.read_csv("datasets/yield.csv")
-    
-    # Filter yield to match pesticides
-    y_filter1= Yield.merge(
-        Pesticides[["Area", "Year"]].drop_duplicates(),
-        on=["Area", "Year"],
-        how="inner"
-    )
+    Rainfall = pd.read_csv("datasets/rainfall.csv")
+    Temperature = pd.read_csv("datasets/temp.csv")
 
     mode = request.args.get("mode")
-    if mode == "Maize":
+    if mode == "Pest":
 
-        y_maize = y_filter1[y_filter1["Item"] == "Maize"]
+        # Filter yield to match pesticides
+        y_filter1= Yield.merge(
+            Pesticides[["Area", "Year"]].drop_duplicates(),
+            on=["Area", "Year"],
+            how="inner"
+        )
 
-        # x_maize = Pesticides.merge(
-        #     y_maize[["Area", "Year"]].drop_duplicates(),
-        #     on=["Area", "Year"],
-        #     how="inner"
-        # )
-
-        maize_data = Pesticides.merge(
-            y_maize,
+        data = Pesticides.merge(
+            y_filter1,
             on=["Area", "Year"],
             how="inner",
             suffixes=("_pest", "_yield")
         )
 
-        X = build_features(maize_data)
-        y = maize_data["Value_yield"]  
-        # X = maize_data
-        # y = maize_data
+        X = build_features(data)
+        y = data["Value_yield"]  
 
-    elif mode == "Wheat":
-        y_wheat = y_filter1[y_filter1["Item"] == "Wheat"]
+    # You can probably just copy most of the code and change the application to answer the other questions we want to do. The second merge is important to make sure that they are lined up correctly.
+    else:
+        pass
 
-        wheat_data = Pesticides.merge(
-            y_wheat,
-            on=["Area", "Year"],
-            how="inner",
-            suffixes=("_pest", "_yield")
-        )
+    # mode = request.args.get("mode")
+    # if mode == "Maize":
 
-        X = build_features(wheat_data)
-        y = wheat_data["Value_yield"]
+    #     y_maize = y_filter1[y_filter1["Item"] == "Maize"]
 
-    elif mode == "Potato":
-        y_potato = y_filter1[y_filter1["Item"] == "Potatoes"]
+    #     # x_maize = Pesticides.merge(
+    #     #     y_maize[["Area", "Year"]].drop_duplicates(),
+    #     #     on=["Area", "Year"],
+    #     #     how="inner"
+    #     # )
 
-        potato_data = Pesticides.merge(
-            y_potato,
-            on=["Area", "Year"],
-            how="inner",
-            suffixes=("_pest", "_yield")
-        )
+    #     maize_data = Pesticides.merge(
+    #         y_maize,
+    #         on=["Area", "Year"],
+    #         how="inner",
+    #         suffixes=("_pest", "_yield")
+    #     )
 
-        X = build_features(potato_data)
-        y = potato_data["Value_yield"]
+    #     X = build_features(maize_data)
+    #     y = maize_data["Value_yield"]  
+    #     # X = maize_data
+    #     # y = maize_data
+
+    # elif mode == "Wheat":
+    #     y_wheat = y_filter1[y_filter1["Item"] == "Wheat"]
+
+    #     wheat_data = Pesticides.merge(
+    #         y_wheat,
+    #         on=["Area", "Year"],
+    #         how="inner",
+    #         suffixes=("_pest", "_yield")
+    #     )
+
+    #     X = build_features(wheat_data)
+    #     y = wheat_data["Value_yield"]
+
+    # elif mode == "Potato":
+    #     y_potato = y_filter1[y_filter1["Item"] == "Potatoes"]
+
+    #     potato_data = Pesticides.merge(
+    #         y_potato,
+    #         on=["Area", "Year"],
+    #         how="inner",
+    #         suffixes=("_pest", "_yield")
+    #     )
+
+    #     X = build_features(potato_data)
+    #     y = potato_data["Value_yield"]
                                
 
     #split into test and train
