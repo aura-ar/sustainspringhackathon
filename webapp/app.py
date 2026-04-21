@@ -6,6 +6,9 @@ import pandas as pd
 
 app = Flask(__name__)
 
+def build_features(dataframe):
+    return pd.get_dummies(dataframe[["Value_pest", "Year", "Area"]], columns=["Area"])
+
 # This route "/" is the default page, this will run when the browerser runs the URL
 @app.route("/")
 def index():
@@ -49,7 +52,7 @@ def run_model():
             suffixes=("_pest", "_yield")
         )
 
-        X = maize_data["Value_pest"]
+        X = build_features(maize_data)
         y = maize_data["Value_yield"]  
         # X = maize_data
         # y = maize_data
@@ -64,7 +67,7 @@ def run_model():
             suffixes=("_pest", "_yield")
         )
 
-        X = wheat_data["Value_pest"]
+        X = build_features(wheat_data)
         y = wheat_data["Value_yield"]
 
     elif mode == "Potato":
@@ -77,9 +80,9 @@ def run_model():
             suffixes=("_pest", "_yield")
         )
 
-        X = potato_data["Value_pest"]
+        X = build_features(potato_data)
         y = potato_data["Value_yield"]
-       
+                               
 
     #split into test and train
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
@@ -97,8 +100,8 @@ def run_model():
     ]
     #feature importance results
     importances = [
-        {"feature": f"Feature {i}", "importance": round(float(v), 4)}
-        for i, v in enumerate(model.feature_importances_)
+        {"feature": feature_name, "importance": round(float(importance), 4)}
+        for feature_name, importance in zip(X.columns, model.feature_importances_)
     ]
     #return these results to script in index.html
     return jsonify({"results": results, "importances": importances})

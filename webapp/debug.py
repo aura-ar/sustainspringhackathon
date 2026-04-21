@@ -31,7 +31,8 @@ X = maize_data["Value_pest"]
 y = maize_data["Value_yield"]  
 
 
-print(maize_data.shape)
-print(maize_data.head(30))    
+# print(maize_data.shape)
+# print(maize_data.head(30))    
 # print(y_maize.shape)
 # print(x_maize.shape)
+print(maize_data.columns.tolist())
