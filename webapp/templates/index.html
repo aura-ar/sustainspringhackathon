@@ -89,14 +89,23 @@
             {loading ? "Running..." : "Pesticides Prediction"}
           </button>
 
-          <button onClick={() => runModel("Wheat")} disabled={loading}>
-            {loading ? "Running..." : "Run Wheat Model"}
+          <button onClick={() => runModel("Rain")} disabled={loading}>
+            {loading ? "Running..." : "Rainfall Prediction"}
           </button>
 
-          <button onClick={() => runModel("Potato")} disabled={loading}>
-            {loading ? "Running..." : "Run Potato Model"}
+          <button onClick={() => runModel("RainYield")} disabled={loading}>
+            {loading ? "Running..." : "Does Predicted Rainfall Predict Yield?"}
           </button>
 
+          <button onClick={() => runModel("Country")} disabled={loading}>
+            {loading ? "Running..." : "Prediction by Country"}
+          </button>
+          
+          <button onClick={() => runModel("CountryByModel")} disabled={loading}>
+            {loading ? "Running..." : "Prediction by Country by Model"}
+          </button>
+
+          
           {/* Only renders the error message if error is not null */}
           {error && <p className="error">{error}</p>}
 
